@@ -13,7 +13,7 @@ console.log(ENV.DB_URL);
 
 
 app.get('/', (req, res) => {
-    res.status(200).json({msg: 'succcccesss 123'});
+    res.status(200).json({msg: 'api is working'});
 });
 
 app.listen(ENV.PORT,() => {
