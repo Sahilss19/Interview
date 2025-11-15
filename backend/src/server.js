@@ -27,12 +27,6 @@ app.get('/about', (req, res) => {
 
 
 
-
-
-
-
-
-
 // make our app ready for deployment
 
 if(ENV.NODE_ENV === 'production'){
@@ -42,10 +36,6 @@ if(ENV.NODE_ENV === 'production'){
         res.sendFile(path.join(__dirname,'../frontend /dist/index.html'));
     });
     }
-
-
-
-
 
 
 
