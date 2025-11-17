@@ -17,7 +17,7 @@ const __dirname = path.resolve();
 
 app.use(express.json())
 // ISME SERVER KO BATA RHE KI KAISE HANDLE KARNA HAI REQUESTS KO
-app.use(cors(origin=ENV.CLIENT_URL,Credentials=true));
+app.use(cors({ origin : ENV.CLIENT_URL,Credentials : true }));
 
 
 app.use('/api/inngest', serve ({client : inngest , functions})); 
