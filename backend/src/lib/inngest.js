@@ -1,10 +1,10 @@
-import {Innjest} from 'inngest';
+import {Inngest} from 'inngest';
 import {connectDB} from './db.js';
 import User from '../models/User.js';
 // import {ENV} from './env.js';
 
 
-export const inngest = new Innjest({ id : 'INTERVIEW_APP'});
+export const inngest = new Inngest({ id : 'INTERVIEW_APP'});
 
 const syncUser = inngest.createFunction(
     { id : 'Sync User to DB'},
