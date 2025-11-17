@@ -1,4 +1,3 @@
-import './App.css'
 import { SignedIn, SignedOut, SignIn, SignInButton, SignOutButton, UserButton } from '@clerk/clerk-react'
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
 
       <SignedOut>
         <SignInButton mode='modal' >
-          <button className='abc'>Sign In/Sign up</button>
+          <button>Sign In/Sign up</button>
         </SignInButton>
       </SignedOut>
 
