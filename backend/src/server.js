@@ -38,7 +38,8 @@ app.get("/about", (req, res) => {
 // 🚀 PRODUCTION — SERVE FRONTEND
 // ===============================
 if (ENV.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../../frontend/dist"); // ✔ fixed path
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+ // ✔ fixed path
 
   app.use(express.static(frontendPath));
 

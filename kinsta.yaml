@@ -1,0 +1,9 @@
+services:
+  - name: web
+    start: npm run start
+    build:
+      - npm run build
+    runtime:
+      node_version: 22
+    disk:
+      persist_mount: false
