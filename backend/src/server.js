@@ -17,7 +17,8 @@ const __dirname = path.resolve();
 
 app.use(express.json())
 // ISME SERVER KO BATA RHE KI KAISE HANDLE KARNA HAI REQUESTS KO
-app.use(cors({ origin : ENV.CLIENT_URL,Credentials : true }));
+app.use(cors({ origin : ENV.CLIENT_URL,credentials: true
+}));
 
 
 app.use('/api/inngest', serve ({client : inngest , functions})); 
@@ -36,9 +37,9 @@ app.get('/about', (req, res) => {
 if(ENV.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname,'../frontend/dist')));
 
-    app.get('/{*any}',(req,res) => {
-        res.sendFile(path.join(__dirname,'../frontend /dist/index.html'));
-    });
+    app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname,'../frontend/dist/index.html'));
+});
     }
 
 const startServer = async () => {
