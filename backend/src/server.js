@@ -5,9 +5,13 @@ import { connectDB } from "./lib/db.js";
 import cors from "cors";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
+import { fileURLToPath } from "url"; // ✔ required for __dirname
 
 const app = express();
-const __dirname = path.resolve();
+
+// ✔ REAL __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middlewares
 app.use(express.json());
@@ -34,10 +38,10 @@ app.get("/about", (req, res) => {
 // 🚀 PRODUCTION — SERVE FRONTEND
 // ===============================
 if (ENV.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/dist");
+  const frontendPath = path.join(__dirname, "../../frontend/dist"); // ✔ fixed path
+
   app.use(express.static(frontendPath));
 
-  // 👇 EXPRESS v5 MATCH-ALL FIX
   app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
