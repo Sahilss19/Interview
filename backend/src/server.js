@@ -18,8 +18,13 @@ app.use(
   })
 );
 
-// API routes
+// Inngest route
 app.use("/api/inngest", serve({ client: inngest, functions }));
+
+// Simple routes
+app.get("/", (req, res) => {
+  res.json({ msg: "api is working" });
+});
 
 app.get("/about", (req, res) => {
   res.json({ msg: "about api is working" });
@@ -29,10 +34,12 @@ app.get("/about", (req, res) => {
 // 🚀 PRODUCTION — SERVE FRONTEND
 // ===============================
 if (ENV.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
 
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  // 👇 EXPRESS v5 MATCH-ALL FIX
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
