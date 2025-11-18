@@ -5,13 +5,9 @@ import { connectDB } from "./lib/db.js";
 import cors from "cors";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
-import { fileURLToPath } from "url"; // ✔ required for __dirname
 
 const app = express();
-
-// ✔ REAL __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
 // Middlewares
 app.use(express.json());
@@ -39,10 +35,9 @@ app.get("/about", (req, res) => {
 // ===============================
 if (ENV.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../frontend/dist");
- // ✔ fixed path
-
   app.use(express.static(frontendPath));
 
+  // 👇 EXPRESS v5 MATCH-ALL FIX
   app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
@@ -51,11 +46,17 @@ if (ENV.NODE_ENV === "production") {
 // ===============================
 // 🚀 START SERVER
 // ===============================
+// ===============================
+// 🚀 START SERVER
+// ===============================
 const start = async () => {
   try {
     await connectDB();
-    app.listen(ENV.PORT, () => {
-      console.log("Server running on:", ENV.PORT);
+
+    const PORT = process.env.PORT || ENV.PORT || 3000;
+
+    app.listen(PORT, () => {
+      console.log("Server running on:", PORT);
     });
   } catch (err) {
     console.error("Server start error:", err);
@@ -63,3 +64,4 @@ const start = async () => {
 };
 
 start();
+
