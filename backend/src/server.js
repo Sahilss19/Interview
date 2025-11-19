@@ -18,39 +18,52 @@ app.use(
   })
 );
 
-// Inngest
+// Inngest route
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-// Routes
-app.get("/health", (req, res) => res.status(200).send({ success: true }));
+// Simple routes
+app.get("/", (req, res) => {
+  res.json({ msg: "api is working" });
+});
 
-// =============================================
-// 🚀 PRODUCTION — SERVE FRONTEND THROUGH BACKEND
-// =============================================
+app.get("/about", (req, res) => {
+  res.json({ msg: "about api is working" });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send({ success: true });
+});
+
+
+// ===============================
+// 🚀 PRODUCTION — SERVE FRONTEND
+// ===============================
 if (ENV.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  // serve static assets
-  app.use(express.static(distPath));
-
-  // SPA fallback
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
-// =============================================
+
+// ===============================
 // 🚀 START SERVER
-// =============================================
+// ===============================
 const start = async () => {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const PORT = process.env.PORT || ENV.PORT || 3000;
+    const PORT = process.env.PORT || ENV.PORT || 3000;
 
-  // VERY IMPORTANT FOR NIXPACKS:
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log("Server running on:", PORT);
-  });
+    app.listen(PORT, "0.0.0.0", () => {
+  console.log("Server running on:", PORT);
+});
+
+  } catch (err) {
+    console.error("Server start error:", err);
+  }
 };
 
 start();
+
