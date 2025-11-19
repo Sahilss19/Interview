@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
 import cors from "cors";
@@ -8,10 +7,7 @@ import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
 
 const app = express();
-
-// Proper dirname fix
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
 // Middlewares
 app.use(express.json());
@@ -25,43 +21,42 @@ app.use(
 // Inngest route
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-// Backend API test
-app.get("/api", (req, res) => {
+// Simple routes
+app.get("/", (req, res) => {
   res.json({ msg: "api is working" });
 });
 
-// Health
-app.get("/health", (req, res) => {
+app.get("/about", (req, res) => {
+  res.json({ msg: "about api is working" });
+});
+
+app.get('/health', (req, res) => {
   res.status(200).send({ success: true });
 });
 
-// ===================================
+
+// ===============================
 // 🚀 PRODUCTION — SERVE FRONTEND
-// ===================================
-if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../frontend/dist");
+// ===============================
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  console.log("Serving frontend from:", distPath);
-
-  // Serve static files
-  app.use(express.static(distPath));
-
-  // React fallback
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
-// ===================================
+
+// ===============================
 // 🚀 START SERVER
-// ===================================
+// ===============================
 const start = async () => {
   try {
     await connectDB();
 
     const PORT = process.env.PORT || ENV.PORT || 3000;
 
-    app.listen(PORT, "0.0.0.0", () => {
+    app.listen(PORT, () => {
       console.log("Server running on:", PORT);
     });
   } catch (err) {
@@ -70,3 +65,4 @@ const start = async () => {
 };
 
 start();
+
