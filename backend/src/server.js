@@ -30,6 +30,11 @@ app.get("/about", (req, res) => {
   res.json({ msg: "about api is working" });
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).send({ success: true });
+});
+
+
 // ===============================
 // 🚀 PRODUCTION — SERVE FRONTEND
 // ===============================
